@@ -48,15 +48,15 @@ psql -U postgres -d gamedeal_db -f gamedeal_api/schema.sql
 ### 2. Backend
 
 ```bash
-cd backend
+cd gamedeal_api
 bundle install
 ```
 
-Cria o ficheiro `.env` na pasta `backend/`:
+Cria o ficheiro `.env` na pasta `gamedeal_api/`:
 
 ```env
 DB_HOST=localhost
-DB_NAME=game_price_tracker
+DB_NAME=gamedeal_db
 DB_USER=postgres
 DB_PASSWORD=a_tua_password
 SESSION_SECRET=secret_com_minimo_64_caracteres_gerado_com_securerandom
