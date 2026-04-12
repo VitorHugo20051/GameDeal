@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const api_url = axios.create({baseURL:"http://localhost:4567"});
+const api_url = axios.create({
+    baseURL:"http://localhost:4567",
+    withCredentials: true,
+});
 
 async function searchGames(query) {
     try {
