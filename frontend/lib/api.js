@@ -53,9 +53,11 @@ async function removeFromWatchlist(id) {
 
 async function login(email, password) {
     try {
-        await api_url.post(`/login`, { email, password });
+        const res = await api_url.post(`/login`, { email, password });
+        return res.data;
     } catch (error) {
         console.error("Error logging in:", error);
+        throw error;
     }
 }
 
@@ -69,9 +71,11 @@ async function logout() {
 
 async function register(email, password) {
     try {
-        await api_url.post(`/register`, { email, password });
+        const res = await api_url.post(`/register`, { email, password });
+        return res.data;
     } catch (error) {
         console.error("Error registering:", error);
+        throw error;
     }
 } 
 

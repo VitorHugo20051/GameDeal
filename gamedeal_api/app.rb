@@ -23,7 +23,7 @@ use Rack::Session::Cookie,
   key: 'rack.session',
   same_site: :lax,
   secure: false,
-  secret: ENV['SESSION_SECRET']
+  secret: ENV['SESSION_SECRET'] || 'dev_secret_muito_longo_para_desenvolvimento_local_muda_em_producao_obrigatorio'
 
 get '/health' do
   content_type :json
