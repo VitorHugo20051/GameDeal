@@ -9,6 +9,9 @@ function GameCard({ game }) {
                     <Link href={`/game/${game.id}`} passHref>
                         {game.title}
                     </Link>
+                    <Link href={`/game/${game.id}?title=${game.title}&slug=${game.slug}`} passHref>
+                        [View Details]
+                    </Link>
                 </Typography>
             </CardContent>
         </Card>

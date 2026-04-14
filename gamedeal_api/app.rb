@@ -8,9 +8,6 @@ require_relative 'routes/auth'
 require_relative 'routes/games'
 require_relative 'routes/watchlist'
 
-enable :sessions
-set :session_secret, ENV['SESSION_SECRET'] || 'dev_secret_muito_longo_para_desenvolvimento_local_muda_em_producao_obrigatorio'
-
 use Rack::Cors do
   allow do
     origins 'http://localhost:3000'
@@ -20,6 +17,13 @@ use Rack::Cors do
       credentials: true
   end
 end
+
+set :session_secret, ENV['SESSION_SECRET'] || 'dev_secret_muito_longo_para_desenvolvimento_local_muda_em_producao_obrigatorio'
+use Rack::Session::Cookie,
+  key: 'rack.session',
+  same_site: :lax,
+  secure: false,
+  secret: ENV['SESSION_SECRET']
 
 get '/health' do
   content_type :json

@@ -8,6 +8,7 @@ get '/watchlist' do
 end
 
 post '/watchlist' do
+  puts "Session: #{session[:user_id].inspect}"
   authenticated!
   content_type :json
   game_data = JSON.parse(request.body.read)

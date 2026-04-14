@@ -1,6 +1,7 @@
 import { searchGames } from '@/lib/api';
 import { useState } from 'react';
 import GameCard from '@/components/GameCard';
+import Link from 'next/link';
 
 export default function Home() {
   const [query, setQuery] = useState('');
@@ -13,6 +14,9 @@ export default function Home() {
         searchGames(query)
           .then(data => setGames(data));
       }}>Search</button>
+      <Link href="/register">Register</Link>
+      <Link href="/login">Login</Link>
+        
       <ul>
         {games.map(game => (
           <li key={game.title}>

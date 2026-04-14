@@ -6,8 +6,7 @@ const api_url = axios.create({
 });
 
 async function searchGames(query) {
-    try {
-        
+    try {   
         const response = await api_url.get(`/games/search`, {params: { q: query }});
         return response.data;
     } catch (error) {
@@ -52,4 +51,28 @@ async function removeFromWatchlist(id) {
     }
 }
 
-export { searchGames, getGamePrice, getWatchlist, addToWatchlist, removeFromWatchlist };
+async function login(email, password) {
+    try {
+        await api_url.post(`/login`, { email, password });
+    } catch (error) {
+        console.error("Error logging in:", error);
+    }
+}
+
+async function logout() {
+    try {
+        await api_url.post(`/logout`);
+    } catch (error) {
+        console.error("Error logging out:", error);
+    }
+}
+
+async function register(email, password) {
+    try {
+        await api_url.post(`/register`, { email, password });
+    } catch (error) {
+        console.error("Error registering:", error);
+    }
+} 
+
+export { searchGames, getGamePrice, getWatchlist, addToWatchlist, removeFromWatchlist, login, logout, register };

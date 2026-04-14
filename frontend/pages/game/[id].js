@@ -1,10 +1,16 @@
 import {} from "react";
 import { useRouter } from "next/router";
 import Game from "../../components/Game";
+import { addToWatchlist } from "@/lib/api";
 
 export default function GamePage() {
   const router = useRouter();
-  const { id } = router.query;
+  const { id, title, slug } = router.query;
 
-  return <Game gameId={id} />;
+  return (<div>
+      <Game gameId={id} />
+      <button onClick={() => router.back()}>Back</button>
+      <button onClick={() => addToWatchlist({ itad_id: id, title, slug })}>Add to Watchlist</button>
+    </div>
+  );
 }
