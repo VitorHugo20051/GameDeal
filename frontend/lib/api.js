@@ -1,13 +1,13 @@
 import axios from "axios";
 
 const api_url = axios.create({
-    baseURL:"http://localhost:4567",
+    baseURL: "http://localhost:4567",
     withCredentials: true,
 });
 
 async function searchGames(query) {
-    try {   
-        const response = await api_url.get(`/games/search`, {params: { q: query }});
+    try {
+        const response = await api_url.get(`/games/search`, { params: { q: query } });
         return response.data;
     } catch (error) {
         console.error("Error fetching games:", error);
@@ -48,6 +48,7 @@ async function removeFromWatchlist(id) {
         await api_url.delete(`/watchlist/${id}`);
     } catch (error) {
         console.error("Error removing from watchlist:", error);
+        throw error;
     }
 }
 
@@ -77,6 +78,14 @@ async function register(email, password) {
         console.error("Error registering:", error);
         throw error;
     }
-} 
+}
 
-export { searchGames, getGamePrice, getWatchlist, addToWatchlist, removeFromWatchlist, login, logout, register };
+async function getMe() {
+    try {
+        const res = await api_url.get(`/me`);
+        return res.data;
+    } catch (error) {
+        return null;
+    }
+}
+export { searchGames, getGamePrice, getWatchlist, addToWatchlist, removeFromWatchlist, login, logout, register, getMe };

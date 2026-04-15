@@ -11,8 +11,14 @@ class Game
 
   def self.price(itad_id)
     url ="https://api.isthereanydeal.com/games/prices/v3"
-    request_for_itad = HTTParty.post(url, query: {key:ENV['ITAD_API_KEY']}, body: [itad_id].to_json, headers: { 'Content-Type' => 'application/json' })
-    request_for_itad[0]['deals'].map {|deal|{name:deal['shop']['name'], price:deal['price']['amount'], currency:deal['price']['currency'], url:deal['url']}}
+    response = HTTParty.post(url, query: {key:ENV['ITAD_API_KEY']}, body: [itad_id].to_json, headers: { 'Content-Type' => 'application/json' })
+    
+    parsed = response.parsed_response
+    if parsed.is_a?(Array) && parsed[0] && parsed[0]['deals']
+      parsed[0]['deals'].map { |deal| {name:deal['shop']['name'], price:deal['price']['amount'], currency:deal['price']['currency'], url:deal['url']} }
+    else
+      []
+    end
   end
 
   def self.find_or_create(itad_id, title, slug)

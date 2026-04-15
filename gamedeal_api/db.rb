@@ -2,7 +2,7 @@ require 'pg'
 require 'dotenv/load'
 
 def db
-  @db ||= PG.connect(
+  PG.connect(
     host: ENV['DB_HOST'] || 'localhost',
     dbname: ENV['DB_NAME'] || 'gamedeal_db',
     user: ENV['DB_USER'] || 'postgres',

@@ -2,7 +2,11 @@ require_relative '../db'
 
 class Watchlist
   def self.get_games(user_id)
-    db.exec_params('SELECT * FROM watchlist WHERE user_id = $1', [user_id]).to_a
+    query = 'SELECT watchlist.*, games.title, games.slug, games.itad_id 
+              FROM watchlist 
+              JOIN games ON watchlist.game_id = games.id 
+              WHERE watchlist.user_id = $1'
+    db.exec_params(query, [user_id]).to_a
   end
 
   def self.add_game(user_id, game_data)

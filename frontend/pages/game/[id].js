@@ -13,7 +13,10 @@ export default function GamePage() {
         <button className="btn btn-ghost btn-sm mb-4" onClick={() => router.back()}>← Back</button>
         <div className="flex justify-between items-center" style={{flexWrap: 'wrap', gap: '16px'}}>
           <h1 style={{fontSize: '40px', color: 'var(--text)'}}>{title}</h1>
-          <button className="btn btn-primary" onClick={() => addToWatchlist({ itad_id: id, title, slug })}>
+          <button className="btn btn-primary" onClick={async () => {
+            await addToWatchlist({ itad_id: id, title, slug });
+            router.push('/watchlist');
+          }}>
             + Add to Watchlist
           </button>
         </div>

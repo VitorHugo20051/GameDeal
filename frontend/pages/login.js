@@ -2,6 +2,8 @@ import { login } from '@/lib/api';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import {useAuth} from '@/context/AuthContext';
+
 
 export default function Login() {
     const router = useRouter();
@@ -9,12 +11,14 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const {checkUser} = useAuth();
 
     const handleLogin = async () => {
         setLoading(true);
         setErrorMsg('');
         try {
             await login(email, password);
+            await checkUser();
             router.push('/');
         } catch (e) {
             console.error(e);
@@ -50,7 +54,7 @@ export default function Login() {
             </button>
 
             <p className="text-center mt-4" style={{ fontSize: '14px', color: 'var(--muted)' }}>
-                Don't have an account? <Link href="/register" style={{ color: 'var(--accent)' }}>Sign up</Link>
+                Dont have an account? <Link href="/register" style={{ color: 'var(--accent)' }}>Sign up</Link>
             </p>
         </div>
     );
