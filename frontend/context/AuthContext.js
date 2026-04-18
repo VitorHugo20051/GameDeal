@@ -1,11 +1,13 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { getMe, logout as apiLogout } from "../lib/api";
+import { useRouter } from "next/router";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         checkUser();
@@ -25,6 +27,7 @@ export function AuthProvider({ children }) {
     const logout = async () => {
         await apiLogout();
         setUser(null);
+        router.push('/login');
     };
 
     return (

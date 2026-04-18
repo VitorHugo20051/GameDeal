@@ -60,18 +60,35 @@ export default function Watchlist() {
       </div>
 
       <div className="grid-cards">
-        {watchlist.map((item) => (
-          <div key={item.game_id || item.id} className="card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--accent2)' }}>{item.title}</h2>
-            <p style={{ color: 'var(--muted)', fontSize: '14px', flexGrow: 1 }}>{item.description}</p>
-            <div className="flex justify-between items-center" style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-              <Link href={`/game/${item.itad_id}?title=${encodeURIComponent(item.title)}&slug=${item.slug}`}>
-                <button className="btn btn-primary btn-sm">View Game</button>
-              </Link>
-              <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.game_id)}>Remove</button>
+        {watchlist.map((item) => {
+          const imageUrl = `https://assets.isthereanydeal.com/${item.itad_id}/banner400.jpg`;
+          return (
+            <div key={item.game_id || item.id} className="card game-card">
+              <div className="game-card-image">
+                <img
+                  src={imageUrl}
+                  alt={item.title}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.classList.add('game-card-image-fallback');
+                  }}
+                />
+              </div>
+              <div className="game-card-body">
+                <h2 className="game-card-title">{item.title}</h2>
+                {item.description && (
+                  <p style={{ color: 'var(--muted)', fontSize: '14px', flexGrow: 1 }}>{item.description}</p>
+                )}
+                <div className="flex justify-between items-center" style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--border)', gap: '8px' }}>
+                  <Link href={`/game/${item.itad_id}?title=${encodeURIComponent(item.title)}&slug=${item.slug}`}>
+                    <button className="btn btn-primary btn-sm">View Game</button>
+                  </Link>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.game_id)}>Remove</button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
