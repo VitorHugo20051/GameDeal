@@ -3,3 +3,7 @@
 Aplicação web para pesquisar e comparar preços de jogos em várias lojas (Steam, Epic, GOG), com sistema de watchlist pessoal por utilizador.
 
 ---
+
+# Página Inicial
+
+![Imagem da página inicial](assets/site.png)
