@@ -3,18 +3,18 @@ require_relative '../models/user'
 post '/register' do
   content_type :json
   body = JSON.parse(request.body.read)
-  email, password = body['email'], body['password']
+  username, email, password = body['username'], body['email'], body['password']
 
-  return { error: 'Email e password obrigatórios' }.to_json if email.nil? || password.nil?
+  return { error: 'Username, email e password obrigatórios' }.to_json if username.nil? || email.nil? || password.nil?
 
-  user = User.create(email, password)
+  user = User.create(username, email, password)
   if user
     session[:user_id] = user['id']
     status 201
-    { message: 'Conta criada', user: { id: user['id'], email: user['email'] } }.to_json
+    { message: 'Conta criada', user: { id: user['id'], username: user['username'], email: user['email'] } }.to_json
   else
     status 409
-    { error: 'Email já registado' }.to_json
+    { error: 'Email ou username já registado' }.to_json
   end
 end
 
@@ -25,7 +25,7 @@ post '/login' do
 
   if user
     session[:user_id] = user['id']
-    { message: 'Login com sucesso', user: { id: user['id'], email: user['email'] } }.to_json
+    { message: 'Login com sucesso', user: { id: user['id'], username: user['username'], email: user['email'] } }.to_json
   else
     status 401
     { error: 'Credenciais inválidas' }.to_json
@@ -41,7 +41,14 @@ end
 get '/me' do
   content_type :json
   if session[:user_id]
-    { user_id: session[:user_id] }.to_json
+    user = User.find_by_id(session[:user_id])
+    if user
+      { id: user['id'], username: user['username'], email: user['email'] }.to_json
+    else
+      session.clear
+      status 401
+      { error: 'Não autenticado' }.to_json
+    end
   else
     status 401
     { error: 'Não autenticado' }.to_json

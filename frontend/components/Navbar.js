@@ -12,10 +12,12 @@ export default function Navbar() {
       <div className="nav-links">
         <Link href="/watchlist" className="btn btn-ghost btn-sm">Watchlist</Link>
         {user ? (
-          <>
-            <span className="text-sm mr-2">Logged in as {user.email}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '16px', paddingLeft: '16px', borderLeft: '1px solid var(--border)' }}>
+            <span style={{ color: 'var(--muted)', fontSize: '14px', fontWeight: 500 }}>
+              Olá, <span style={{ color: 'var(--accent2)', fontWeight: 700 }}>{user.username}</span>
+            </span>
             <button onClick={logout} className="btn btn-ghost btn-sm">Logout</button>
-          </>
+          </div>
         ) : (
           <>
             <Link href="/login" className="btn btn-ghost btn-sm">Login</Link>

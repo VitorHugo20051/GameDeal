@@ -70,9 +70,9 @@ async function logout() {
     }
 }
 
-async function register(email, password) {
+async function register(username, email, password) {
     try {
-        const res = await api_url.post(`/register`, { email, password });
+        const res = await api_url.post(`/register`, { username, email, password });
         return res.data;
     } catch (error) {
         console.error("Error registering:", error);
