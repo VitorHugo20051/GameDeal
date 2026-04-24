@@ -22,7 +22,7 @@ set :session_secret, ENV['SESSION_SECRET'] || 'dev_secret_muito_longo_para_desen
 use Rack::Session::Cookie,
   key: 'rack.session',
   same_site: :lax,
-  secure: false,
+  secure: ENV['RACK_ENV'] == 'production',
   secret: ENV['SESSION_SECRET'] || 'dev_secret_muito_longo_para_desenvolvimento_local_muda_em_producao_obrigatorio'
 
 get '/health' do

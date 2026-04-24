@@ -1,11 +1,22 @@
 require_relative '../models/user'
+require 'uri'
 
 post '/register' do
   content_type :json
-  body = JSON.parse(request.body.read)
+  begin
+    body = JSON.parse(request.body.read)
+  rescue JSON::ParserError
+    status 400
+    return { error: 'JSON inválido' }.to_json
+  end
+
   username, email, password = body['username'], body['email'], body['password']
 
   return { error: 'Username, email e password obrigatórios' }.to_json if username.nil? || email.nil? || password.nil?
+  return { error: 'Dados inválidos' }.to_json unless username.is_a?(String) && email.is_a?(String) && password.is_a?(String)
+
+  return { error: 'O email tem um formato inválido' }.to_json unless email.match?(URI::MailTo::EMAIL_REGEXP)
+  return { error: 'A password deve ter pelo menos 8 caracteres' }.to_json if password.length < 8
 
   user = User.create(username, email, password)
   if user
@@ -20,8 +31,19 @@ end
 
 post '/login' do
   content_type :json
-  body = JSON.parse(request.body.read)
-  user = User.authenticate(body['email'], body['password'])
+  begin
+    body = JSON.parse(request.body.read)
+  rescue JSON::ParserError
+    status 400
+    return { error: 'JSON inválido' }.to_json
+  end
+
+  email, password = body['email'], body['password']
+  
+  return { error: 'Email e password obrigatórios' }.to_json if email.nil? || password.nil?
+  return { error: 'Dados inválidos' }.to_json unless email.is_a?(String) && password.is_a?(String)
+
+  user = User.authenticate(email, password)
 
   if user
     session[:user_id] = user['id']
