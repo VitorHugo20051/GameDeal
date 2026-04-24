@@ -2,10 +2,12 @@ import { getWatchlist, removeFromWatchlist as apiRemove } from "@/lib/api";
 import { useEffect, useState } from "react";
 import Link from 'next/link';
 import { useRouter } from "next/router";
+import { useToast } from "@/components/Toast";
 
 export default function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { addToast } = useToast();
 
   const router = useRouter();
 
@@ -28,13 +30,23 @@ export default function Watchlist() {
     fetchWatchlist();
   }, []);
 
-  async function handleRemove(game_id) {
+  // Show toast if redirected here after adding a game
+  useEffect(() => {
+    if (router.query.added) {
+      addToast(`"${router.query.added}" added to your watchlist!`, 'success');
+      // Clean up the URL
+      router.replace('/watchlist', undefined, { shallow: true });
+    }
+  }, [router.query.added]);
+
+  async function handleRemove(game_id, title) {
     try {
       await apiRemove(game_id);
+      addToast(`"${title}" removed from your watchlist`, 'info');
       const data = await getWatchlist();
       setWatchlist(data);
     } catch(err) {
-      alert("Error removing from watchlist!");
+      addToast("Error removing from watchlist!", 'error');
     }
   }
 
@@ -83,7 +95,7 @@ export default function Watchlist() {
                   <Link href={`/game/${item.itad_id}?title=${encodeURIComponent(item.title)}&slug=${item.slug}`}>
                     <button className="btn btn-primary btn-sm">View Game</button>
                   </Link>
-                  <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.game_id)}>Remove</button>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleRemove(item.game_id, item.title)}>Remove</button>
                 </div>
               </div>
             </div>

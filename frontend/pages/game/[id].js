@@ -1,11 +1,25 @@
-import {} from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Game from "../../components/Game";
 import { addToWatchlist } from "@/lib/api";
+import { useToast } from "@/components/Toast";
 
 export default function GamePage() {
   const router = useRouter();
   const { id, title, slug } = router.query;
+  const { addToast } = useToast();
+  const [adding, setAdding] = useState(false);
+
+  async function handleAddToWatchlist() {
+    setAdding(true);
+    try {
+      await addToWatchlist({ itad_id: id, title, slug });
+      router.push(`/watchlist?added=${encodeURIComponent(title)}`);
+    } catch (err) {
+      addToast("Error adding to watchlist!", 'error');
+      setAdding(false);
+    }
+  }
 
   return (
     <div className="animate-in">
@@ -13,11 +27,8 @@ export default function GamePage() {
         <button className="btn btn-ghost btn-sm mb-4" onClick={() => router.back()}>← Back</button>
         <div className="flex justify-between items-center" style={{flexWrap: 'wrap', gap: '16px'}}>
           <h1 style={{fontSize: '40px', color: 'var(--text)'}}>{title}</h1>
-          <button className="btn btn-primary" onClick={async () => {
-            await addToWatchlist({ itad_id: id, title, slug });
-            router.push('/watchlist');
-          }}>
-            + Add to Watchlist
+          <button className="btn btn-primary" onClick={handleAddToWatchlist} disabled={adding}>
+            {adding ? <><span className="spinner" style={{width: '16px', height: '16px'}}></span> Adding...</> : '+ Add to Watchlist'}
           </button>
         </div>
       </div>
