@@ -88,4 +88,15 @@ async function getMe() {
         return null;
     }
 }
-export { searchGames, getGamePrice, getWatchlist, addToWatchlist, removeFromWatchlist, login, logout, register, getMe };
+
+async function getPopularGames() {
+    try {
+        const res = await api_url.get(`/games/popular`);
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching popular games:", error);
+        return [];
+    }
+}
+
+export { searchGames, getGamePrice, getWatchlist, addToWatchlist, removeFromWatchlist, login, logout, register, getMe, getPopularGames };

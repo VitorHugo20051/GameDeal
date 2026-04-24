@@ -1,11 +1,20 @@
-import { searchGames } from '@/lib/api';
-import { useState } from 'react';
+import { searchGames, getPopularGames } from '@/lib/api';
+import { useState, useEffect } from 'react';
 import GameCard from '@/components/GameCard';
 
 export default function Home() {
   const [query, setQuery] = useState('');
   const [games, setGames] = useState([]);
+  const [popularGames, setPopularGames] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function loadPopular() {
+      const data = await getPopularGames();
+      setPopularGames(data);
+    }
+    loadPopular();
+  }, []);
 
   const handleSearch = async () => {
     if (!query) return;
@@ -46,6 +55,17 @@ export default function Home() {
           {games.map(game => (
             <GameCard key={game.id || game.title} game={game} />
           ))}
+        </div>
+      )}
+
+      {games.length === 0 && popularGames.length > 0 && (
+        <div style={{ marginTop: '48px' }}>
+          <h2 style={{ fontSize: '32px', marginBottom: '24px', color: 'var(--text)' }}>Trending Games</h2>
+          <div className="grid-cards">
+            {popularGames.map(game => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </div>
         </div>
       )}
     </div>
