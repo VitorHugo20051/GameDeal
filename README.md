@@ -14,19 +14,6 @@ gamedeal/
 
 ---
 
-## 🛠️ Tecnologias
-
-| Camada | Tecnologia |
-|--------|-----------|
-| Backend | Ruby + Sinatra |
-| Base de dados | PostgreSQL |
-| Autenticação | bcrypt + rack-session |
-| Preços | IsThereAnyDeal API |
-| Frontend | Next.js + React |
-| OAuth | NextAuth (Google/GitHub) |
-
----
-
 ## ⚙️ Requisitos
 
 - Ruby >= 3.x
