@@ -25,7 +25,7 @@ export default function GamePage() {
     <div className="animate-in">
       <div style={{marginBottom: '40px'}}>
         <button className="btn btn-ghost btn-sm mb-4" onClick={() => router.back()}>← Back</button>
-        <div className="flex justify-between items-center" style={{flexWrap: 'wrap', gap: '16px'}}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <h1 style={{fontSize: '40px', color: 'var(--text)'}}>{title}</h1>
           <button className="btn btn-primary" onClick={handleAddToWatchlist} disabled={adding}>
             {adding ? <><span className="spinner" style={{width: '16px', height: '16px'}}></span> Adding...</> : '+ Add to Watchlist'}

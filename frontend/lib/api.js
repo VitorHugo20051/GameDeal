@@ -31,7 +31,7 @@ async function getWatchlist() {
         return response.data;
     } catch (error) {
         console.error("Error fetching watchlist:", error);
-        return [];
+        throw error;
     }
 }
 

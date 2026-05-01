@@ -39,7 +39,7 @@ export default function Login() {
                 </div>
             )}
 
-            <div className="flex-col gap-2">
+            <div className="flex-col gap-2 mb-4">
                 <label style={{ fontSize: '14px', fontWeight: 500 }}>Email address</label>
                 <input className="input" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
             </div>

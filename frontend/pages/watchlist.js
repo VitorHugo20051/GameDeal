@@ -4,14 +4,24 @@ import Link from 'next/link';
 import { useRouter } from "next/router";
 import { useToast } from "@/components/Toast";
 
+import { useAuth } from "@/context/AuthContext";
+
 export default function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const { addToast } = useToast();
+  const { user, loading: authLoading } = useAuth();
 
   const router = useRouter();
 
   useEffect(() => {
+    if (authLoading) return; // Wait for auth to finish checking
+    
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
     async function fetchWatchlist() {
       try {
         const data = await getWatchlist();
@@ -21,14 +31,13 @@ export default function Watchlist() {
         }
         setWatchlist(data);
       } catch (error) {
-        if (error.response?.status === 401) {
-          router.push('/login');
-        }
+        router.push('/login');
+      } finally {
         setLoading(false);
-      } finally {setLoading(false);}
+      }
     }
     fetchWatchlist();
-  }, []);
+  }, [authLoading, user]);
 
   // Show toast if redirected here after adding a game
   useEffect(() => {
