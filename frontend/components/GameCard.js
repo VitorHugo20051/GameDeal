@@ -7,7 +7,7 @@ function GameCard({ game, index = 0 }) {
     const [cheapest, setCheapest] = useState(null);
     const [priceLoading, setPriceLoading] = useState(true);
 
-    const imageUrl = game.assets?.banner400 || game.assets?.banner300 
+    const imageUrl = game.assets?.banner400 || game.assets?.banner300
         || `https://assets.isthereanydeal.com/${game.id}/banner400.jpg`;
 
     useEffect(() => {
@@ -20,7 +20,6 @@ function GameCard({ game, index = 0 }) {
                     setCheapest(best);
                 }
             } catch (e) {
-                // silently fail
             } finally {
                 if (!cancelled) setPriceLoading(false);
             }
@@ -31,20 +30,20 @@ function GameCard({ game, index = 0 }) {
     }, [game.id]);
 
     return (
-        <motion.div 
+        <motion.div
             className="game-card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            whileHover={{ 
-                y: -8, 
+            whileHover={{
+                y: -8,
                 boxShadow: "0 20px 40px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow)",
                 borderColor: "rgba(139, 92, 246, 0.4)"
             }}
         >
             <div className="game-card-image">
-                <motion.img 
-                    src={imageUrl} 
+                <motion.img
+                    src={imageUrl}
                     alt={game.title}
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.6 }}
@@ -60,7 +59,7 @@ function GameCard({ game, index = 0 }) {
                     <h3 className="game-card-title">{game.title}</h3>
                     <AnimatePresence>
                         {!priceLoading && cheapest && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="game-card-price-tag"
@@ -70,7 +69,7 @@ function GameCard({ game, index = 0 }) {
                         )}
                     </AnimatePresence>
                 </div>
-                
+
                 <div style={{ minHeight: '40px' }}>
                     {!priceLoading && cheapest ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -84,8 +83,8 @@ function GameCard({ game, index = 0 }) {
                 </div>
 
                 <Link href={`/game/${game.id}?title=${encodeURIComponent(game.title)}&slug=${game.slug}`} style={{ width: '100%', marginTop: 'auto' }}>
-                    <motion.button 
-                        className="btn btn-primary btn-sm" 
+                    <motion.button
+                        className="btn btn-primary btn-sm"
                         style={{ width: '100%' }}
                         whileTap={{ scale: 0.95 }}
                     >

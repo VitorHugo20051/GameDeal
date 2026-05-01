@@ -16,7 +16,7 @@ export default function Watchlist() {
 
   useEffect(() => {
     if (authLoading) return; // Wait for auth to finish checking
-    
+
     if (!user) {
       router.push('/login');
       return;
@@ -39,11 +39,9 @@ export default function Watchlist() {
     fetchWatchlist();
   }, [authLoading, user]);
 
-  // Show toast if redirected here after adding a game
   useEffect(() => {
     if (router.query.added) {
       addToast(`"${router.query.added}" added to your watchlist!`, 'success');
-      // Clean up the URL
       router.replace('/watchlist', undefined, { shallow: true });
     }
   }, [router.query.added]);
@@ -54,7 +52,7 @@ export default function Watchlist() {
       addToast(`"${title}" removed from your watchlist`, 'info');
       const data = await getWatchlist();
       setWatchlist(data);
-    } catch(err) {
+    } catch (err) {
       addToast("Error removing from watchlist!", 'error');
     }
   }
