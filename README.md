@@ -6,4 +6,4 @@ Aplicação web para pesquisar e comparar preços de jogos em várias lojas (Ste
 
 # Página Inicial
 
-![Imagem da página inicial](assets/site.png)
+![Imagem da página inicial](assets/sites.png)
