@@ -4,19 +4,33 @@ require 'json'
 
 class Game
   def self.search(query)
-    url = "https://api.isthereanydeal.com/games/search/v1"
-    response_from_itad = HTTParty.get(url, query:{ key: ENV['ITAD_API_KEY'], title: query})
-    response_from_itad.map {|game| {id: game['id'], slug:game['slug'], title:game['title'], assets: game['assets']} }
+    begin
+      url = "https://api.isthereanydeal.com/games/search/v1"
+      response = HTTParty.get(url, query:{ key: ENV['ITAD_API_KEY'], title: query})
+      if response.success? && response.parsed_response.is_a?(Array)
+        response.parsed_response.map {|game| {id: game['id'], slug:game['slug'], title:game['title'], assets: game['assets'], mature: game['mature']} }
+      else
+        []
+      end
+    rescue => e
+      puts "Error fetching search from ITAD: #{e.message}"
+      []
+    end
   end
 
   def self.price(itad_id)
-    url ="https://api.isthereanydeal.com/games/prices/v3"
-    response = HTTParty.post(url, query: {key:ENV['ITAD_API_KEY']}, body: [itad_id].to_json, headers: { 'Content-Type' => 'application/json' })
-    
-    parsed = response.parsed_response
-    if parsed.is_a?(Array) && parsed[0] && parsed[0]['deals']
-      parsed[0]['deals'].map { |deal| {name:deal['shop']['name'], price:deal['price']['amount'], currency:deal['price']['currency'], url:deal['url']} }
-    else
+    begin
+      url ="https://api.isthereanydeal.com/games/prices/v3"
+      response = HTTParty.post(url, query: {key:ENV['ITAD_API_KEY']}, body: [itad_id].to_json, headers: { 'Content-Type' => 'application/json' })
+      
+      parsed = response.parsed_response
+      if response.success? && parsed.is_a?(Array) && parsed[0] && parsed[0]['deals']
+        parsed[0]['deals'].map { |deal| {name:deal['shop']['name'], price:deal['price']['amount'], currency:deal['price']['currency'], url:deal['url']} }
+      else
+        []
+      end
+    rescue => e
+      puts "Error fetching price from ITAD: #{e.message}"
       []
     end
   end
@@ -44,13 +58,18 @@ class Game
 
       featured = steam_response.parsed_response["featured_win"] || []
       
-      popular_games = featured.first(9).map do |s_game|
+      popular_games = []
+      featured.each do |s_game|
+        break if popular_games.length >= 9
+        
         itad_results = self.search(s_game["name"])
         
         if itad_results.any?
-          itad_results.first
+          game = itad_results.first
+          next if game[:mature]
+          popular_games << game
         else
-          {
+          popular_games << {
             "id" => "steam-#{s_game["id"]}",
             "slug" => s_game["name"].downcase.gsub(/[^a-z0-9]/, '-').squeeze('-'),
             "title" => s_game["name"],

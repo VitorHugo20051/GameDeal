@@ -4,10 +4,10 @@ require 'uri'
 post '/register' do
   content_type :json
   begin
-    body = JSON.parse(request.body.read)
-  rescue JSON::ParserError
+    body = JSON.parse(request.body.read(4096))
+  rescue JSON::ParserError, TypeError
     status 400
-    return { error: 'JSON inválido' }.to_json
+    return { error: 'JSON inválido ou demasiado grande' }.to_json
   end
 
   username, email, password = body['username'], body['email'], body['password']
@@ -32,10 +32,10 @@ end
 post '/login' do
   content_type :json
   begin
-    body = JSON.parse(request.body.read)
-  rescue JSON::ParserError
+    body = JSON.parse(request.body.read(4096))
+  rescue JSON::ParserError, TypeError
     status 400
-    return { error: 'JSON inválido' }.to_json
+    return { error: 'JSON inválido ou demasiado grande' }.to_json
   end
 
   email, password = body['email'], body['password']

@@ -15,10 +15,10 @@ export default function Watchlist() {
   const router = useRouter();
 
   useEffect(() => {
-    if (authLoading) return; // Wait for auth to finish checking
+    if (authLoading) return;
 
     if (!user) {
-      router.push('/login');
+      router.replace('/login');
       return;
     }
 
@@ -26,12 +26,12 @@ export default function Watchlist() {
       try {
         const data = await getWatchlist();
         if (!data) {
-          router.push('/login');
+          router.replace('/login');
           return;
         }
         setWatchlist(data);
       } catch (error) {
-        router.push('/login');
+        router.replace('/login');
       } finally {
         setLoading(false);
       }

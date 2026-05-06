@@ -11,9 +11,18 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const [touched, setTouched] = useState({ email: false, password: false });
     const {checkUser} = useAuth();
 
+    const emailError = touched.email && !email.trim() ? 'Email é obrigatório' : '';
+    const passwordError = touched.password && !password.trim() ? 'Password é obrigatória' : '';
+
     const handleLogin = async () => {
+        setTouched({ email: true, password: true });
+        if (!email.trim() || !password.trim()) {
+            setErrorMsg('Por favor preenche todos os campos.');
+            return;
+        }
         setLoading(true);
         setErrorMsg('');
         try {
@@ -41,12 +50,31 @@ export default function Login() {
 
             <div className="flex-col gap-2 mb-4">
                 <label style={{ fontSize: '14px', fontWeight: 500 }}>Email address</label>
-                <input className="input" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+                <input
+                    className="input"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={e => { setEmail(e.target.value); setErrorMsg(''); }}
+                    onBlur={() => setTouched(t => ({ ...t, email: true }))}
+                    style={emailError ? { borderColor: 'var(--danger)' } : {}}
+                />
+                {emailError && <span style={{ color: 'var(--danger)', fontSize: '12px' }}>{emailError}</span>}
             </div>
 
             <div className="flex-col gap-2 mb-4">
                 <label style={{ fontSize: '14px', fontWeight: 500 }}>Password</label>
-                <input className="input" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLogin()} />
+                <input
+                    className="input"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setErrorMsg(''); }}
+                    onBlur={() => setTouched(t => ({ ...t, password: true }))}
+                    onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                    style={passwordError ? { borderColor: 'var(--danger)' } : {}}
+                />
+                {passwordError && <span style={{ color: 'var(--danger)', fontSize: '12px' }}>{passwordError}</span>}
             </div>
 
             <button className="btn btn-primary" style={{ justifyContent: 'center', padding: '12px' }} onClick={handleLogin} disabled={loading}>
